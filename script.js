@@ -21,7 +21,14 @@ const inputElevation = document.querySelector('.form__input--elevation');
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-           
+           map.on('click', function(mapEvent){
+              console.log(mapEvent);
+              const {lat, lng} = mapEvent.latlng;
+
+              L.marker([lat, lng]).addTo(map)
+              .bindPopup('workout')
+              .openPopup();
+             })
 
              
             
