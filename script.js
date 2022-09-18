@@ -55,6 +55,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class App{
   #map;
   #mapEvent;
+  #workouts = [];
 
   constructor(){
     this._getPosition();
@@ -108,7 +109,8 @@ class App{
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
-
+    const {lat, lng} = this.#mapEvent.latlng;
+    let workout;
     
 
     //if workout is running - create running object
@@ -123,6 +125,8 @@ class App{
           // !Number.isFinite(cadence)
           )
         return alert('Inputs have to be positive number');
+        workout = new Running([lat, lng], distance, duration, cadence);
+        
     }
 
     // If workout cycling, create cycling object
@@ -132,12 +136,16 @@ class App{
           !allPositive(distance, duration)
           )
         return alert('Inputs have to be positive number');
+        workout = new Cycling([lat, lng], distance, duration, elevation);
     }
 
     // add the new object to workout array
+    this.#workouts.push(workout);
+
 
     //Render workout on map as maker
-     const {lat, lng} = this.#mapEvent.latlng;
+    
+    
     L.marker([lat, lng])
     .addTo(this.#map)
     .bindPopup(
