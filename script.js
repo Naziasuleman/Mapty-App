@@ -97,14 +97,43 @@ class App{
 
   
   _newWorkout(e){
+    const validInputs = (...inputs) =>
+      inputs.every(inp => Number.isFinite(inp));
+    const allPositive = (...inputs) =>
+      inputs.every(inp => inp>0);  
+
+
     e.preventDefault();
     //get data from the form
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
-    //check the data is valid
+
+    
+
     //if workout is running - create running object
+    if(type === 'running'){
+      const cadence = +inputCadence.value;
+        //check the data is valid
+        if (
+          !validInputs(distance, duration, cadence) || 
+          !allPositive(distance, duration, cadence)
+          // !Number.isFinite(distance) ||
+          // !Number.isFinite(duration) ||
+          // !Number.isFinite(cadence)
+          )
+        return alert('Inputs have to be positive number');
+    }
+
     // If workout cycling, create cycling object
+    if(type === 'cycling'){
+      const elevation = +inputElevation.value;
+      if (!validInputs(distance, duration, elevation) ||
+          !allPositive(distance, duration)
+          )
+        return alert('Inputs have to be positive number');
+    }
+
     // add the new object to workout array
 
     //Render workout on map as maker
