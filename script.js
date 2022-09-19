@@ -13,7 +13,7 @@ class Workout{
   _setDescription(){
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    this.description = `${this.type[0].toUpperase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} 
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} 
     ${this.date.getDate()}`
   }}
 
@@ -67,9 +67,10 @@ class App{
 
   constructor(){
     this._getPosition();
-     form.addEventListener('submit', this._newWorkout.bind(this));
-     inputType.addEventListener('change', this._toggleElevationField);
-  }
+    form.addEventListener('submit', this._newWorkout.bind(this));
+    inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('.click', this._moveToPopup).bind(this);
+}
 
   _getPosition(){
      if (navigator.geolocation)
@@ -234,9 +235,19 @@ class App{
       `;
 
       form.insertAdjacentHTML('afterend', html);
-  }
-}
+      }
+      _moveToPopup(e){
+        const workoutEl = e.target.closest('.workout');
+        console.log(workoutEl);
 
+        if (!workoutEl) return;
+
+        const workout = this.#workouts.find(work => work.id === workoutEl.dataset.id);
+        console.log(workout);
+
+        
+      }
+  }
 
 
 const app = new App();
