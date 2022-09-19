@@ -72,7 +72,13 @@ class App{
   #workouts = [];
 
   constructor(){
+    //Get User's Position
     this._getPosition();
+
+    //get data from local storage
+    this._getLocalStorage();
+
+    //Attach event handler
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
@@ -96,6 +102,11 @@ class App{
     }).addTo(this.#map);
     
     this.#map.on('click', this._showForm.bind(this));
+
+     this.#workouts.forEach(work => {
+          this._renderWorkoutMarker(work);
+          
+        })
   }
 
 
@@ -173,7 +184,12 @@ class App{
     //Hide the form - clear the input field
     //clearing all the input fields
     this._hideForm();
+
+    //Set the local storage to all workouts
+    this._setLocalStorage();
   }
+
+
     _renderWorkoutMarker(workout){
       L.marker(workout.coords)
       .addTo(this.#map)
@@ -244,12 +260,12 @@ class App{
       }
       _moveToPopup(e){
         const workoutEl = e.target.closest('.workout');
-        console.log(workoutEl);
+        //console.log(workoutEl);
 
         if (!workoutEl) return;
 
         const workout = this.#workouts.find(work => work.id === workoutEl.dataset.id);
-        console.log(workout);
+        //console.log(workout);
 
         this.#map.setView(workout.coords, this.#mapZoomLevel, {
           animate: true,
@@ -258,10 +274,30 @@ class App{
           },
         } )
 
-        workout.click();
+        //workout.click();
+      }
+      _setLocalStorage(){
+        localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+      }
+
+      _getLocalStorage(){
+        const data = JSON.parse(localStorage.getItem('workouts'));
+       // console.log(data);
+
+        if (!data) return;
+        this.#workouts = data;
+        this.#workouts.forEach(work => {
+          this._renderWorkout(work);
+
+        })
+      }
+      reset(){
+        //localstorage has the method to remove the  items by using id
+        localStorage.removeItem('workouts');
+        //one of the big objects that has one of the ability to reload the page
+        location.reload();
       }
   }
-
 
 const app = new App();
 
